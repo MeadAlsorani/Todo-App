@@ -28,7 +28,10 @@ public class GetTodosQueryHandler : IRequestHandler<GetTodosQuery, TodosVm>
                 .Cast<PriorityLevel>()
                 .Select(p => new PriorityLevelDto { Value = (int)p, Name = p.ToString() })
                 .ToList(),
-
+            Tags = await _context.TodoTags
+                .AsNoTracking()
+                .ProjectTo<TodoTagDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken),
             Lists = await _context.TodoLists
                 .AsNoTracking()
                 .ProjectTo<TodoListDto>(_mapper.ConfigurationProvider)
