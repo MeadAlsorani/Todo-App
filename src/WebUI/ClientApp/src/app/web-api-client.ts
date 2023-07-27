@@ -1219,6 +1219,7 @@ export interface ITodoItemDto {
 export class TodoTagDto implements ITodoTagDto {
     id?: number;
     name?: string;
+    usageCount?: number;
 
     constructor(data?: ITodoTagDto) {
         if (data) {
@@ -1233,6 +1234,7 @@ export class TodoTagDto implements ITodoTagDto {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.usageCount = _data["usageCount"];
         }
     }
 
@@ -1247,6 +1249,7 @@ export class TodoTagDto implements ITodoTagDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["usageCount"] = this.usageCount;
         return data;
     }
 }
@@ -1254,6 +1257,7 @@ export class TodoTagDto implements ITodoTagDto {
 export interface ITodoTagDto {
     id?: number;
     name?: string;
+    usageCount?: number;
 }
 
 export class CreateTodoListCommand implements ICreateTodoListCommand {

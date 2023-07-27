@@ -49,6 +49,7 @@ export class TodoComponent implements OnInit {
   });
   tags: TodoTagDto[] = [];
   copiedListItems: TodoItemDto[];
+  top5Tags: TodoTagDto[] = [];
 
   constructor(
     private listsClient: TodoListsClient,
@@ -64,6 +65,10 @@ export class TodoComponent implements OnInit {
         this.lists = result.lists;
         this.priorityLevels = result.priorityLevels;
         this.tags = result.tags;
+        const sortedTags = this.tags.sort(
+          (a, b) => b.usageCount - a.usageCount
+        );
+        this.top5Tags = sortedTags.slice(0, 5);
         if (this.lists.length) {
           this.selectedList = this.lists[0];
           this.copiedListItems = JSON.parse(
@@ -125,6 +130,18 @@ export class TodoComponent implements OnInit {
     if (tagId !== -1) {
       this.selectedList.items = [
         ...this.selectedList.items.filter((item) => item.tags.includes(tagId)),
+      ];
+    } else {
+      this.selectedList.items = [...this.copiedListItems];
+    }
+  }
+  filterByText(text: string) {
+    console.log(text);
+    if (text != null && text !== '') {
+      this.selectedList.items = [
+        ...this.selectedList.items.filter((item) =>
+          item.title.toLowerCase().includes(text.toLowerCase())
+        ),
       ];
     } else {
       this.selectedList.items = [...this.copiedListItems];

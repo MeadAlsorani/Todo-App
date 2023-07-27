@@ -3,7 +3,12 @@
 <p>This is a complex todo list component.</p>
 
 <p *ngIf="!lists"><em>Loading...</em></p>
-
+<div *ngIf="top5Tags != null && top5Tags.length > 0">
+  <span>Top 5 tags: </span>
+  <span class="item-tags" *ngFor="let topTag of top5Tags">
+    <span style="font-size: 12px">{{ topTag.name }}</span>
+  </span>
+</div>
 <div *ngIf="lists">
   <div class="row">
     <div class="col-sm-4">
@@ -50,14 +55,22 @@
       <div class="tags-filter-div">
         <select
           class="form-control"
-          ngModel
+          [ngModel]="-1"
           (ngModelChange)="filterByTag($event)"
         >
-          <option [ngValue]="-1"></option>
+          <option [ngValue]="-1">Select a tag..</option>
           <option *ngFor="let tag of tags" [ngValue]="tag.id">
             {{ tag.name }}
           </option>
         </select>
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="search by text.."
+          ngModel
+          (ngModelChange)="filterByText($event)"
+        />
       </div>
       <ul id="todo-items" class="list-group mb-2">
         <li
