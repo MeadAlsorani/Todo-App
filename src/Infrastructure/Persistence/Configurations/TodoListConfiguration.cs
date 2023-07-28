@@ -14,5 +14,10 @@ public class TodoListConfiguration : IEntityTypeConfiguration<TodoList>
 
         builder
             .OwnsOne(b => b.Colour);
+
+        builder.Property(list => list.Active)
+            .HasDefaultValue(true);
+
+        builder.HasQueryFilter(list => list.Active);
     }
 }

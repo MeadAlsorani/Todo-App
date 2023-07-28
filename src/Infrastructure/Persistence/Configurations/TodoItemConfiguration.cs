@@ -14,5 +14,9 @@ public class TodoItemConfiguration : IEntityTypeConfiguration<TodoItem>
 
         builder.Property(t => t.Note)
             .HasMaxLength(2);
+        builder.Property(t => t.Active)
+            .HasDefaultValue(true);
+
+        builder.HasQueryFilter(t => t.Active);
     }
 }
