@@ -4,7 +4,9 @@ using Todo_App.Application.Common.Exceptions;
 using Todo_App.Application.TodoItems.Commands.CreateTodoItem;
 using Todo_App.Application.TodoItems.Commands.UpdateTodoItem;
 using Todo_App.Application.TodoItems.Commands.UpdateTodoItemDetail;
+using Todo_App.Application.TodoItems.Queries.GetTodoItem;
 using Todo_App.Application.TodoLists.Commands.CreateTodoList;
+using Todo_App.Application.TodoTags.Commands;
 using Todo_App.Domain.Entities;
 using Todo_App.Domain.Enums;
 
@@ -57,5 +59,42 @@ public class UpdateTodoItemDetailTests : BaseTestFixture
         item.LastModifiedBy.Should().Be(userId);
         item.LastModified.Should().NotBeNull();
         item.LastModified.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));
+    }
+
+    [Test]
+    public async Task ShouldUpdateItemWithTags()
+    {
+        var userId = await RunAsDefaultUserAsync();
+
+        var listId = await SendAsync(new CreateTodoListCommand
+        {
+            Title = "New List"
+        });
+
+        var itemId = await SendAsync(new CreateTodoItemCommand
+        {
+            ListId = listId,
+            Title = "New Item"
+        });
+
+        var tagId = await SendAsync(new CreateTodoTagCommand
+        {
+            Name = "Tag 1"
+        });
+        var command = new UpdateTodoItemDetailCommand
+        {
+            Id = itemId,
+            ListId = listId,
+            Note = "A1",
+            Priority = PriorityLevel.High,
+            Tags = new List<int> { tagId }
+        };
+
+        await SendAsync(command);
+
+        var item = await SendAsync(new GetTodoItemQuery() { Id = itemId });
+
+        item.Should().NotBeNull();
+        item!.Tags.Should().HaveCount(1);
     }
 }
