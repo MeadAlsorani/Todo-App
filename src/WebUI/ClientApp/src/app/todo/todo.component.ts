@@ -96,7 +96,6 @@ export class TodoComponent implements OnInit {
       },
       (error) => {
         const errors = JSON.parse(error.response);
-
         if (errors && errors.Title) {
           this.newListEditor.error = errors.Title[0];
         }
