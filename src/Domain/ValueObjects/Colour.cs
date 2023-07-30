@@ -1,4 +1,7 @@
-﻿namespace Todo_App.Domain.ValueObjects;
+﻿using System.Drawing;
+using System.Reflection;
+
+namespace Todo_App.Domain.ValueObjects;
 
 public class Colour : ValueObject
 {
@@ -74,7 +77,27 @@ public class Colour : ValueObject
             yield return Grey;
         }
     }
-
+    public static string GetName(string code)
+    {
+        var colour = From(code);
+        var type = colour.GetType();
+        var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Static);
+        string name = string.Empty;
+        foreach (var prop in properties)
+        {
+            var value = prop.GetValue(null) as Colour;
+            if (value != null && value.Code.Equals(code))
+            {
+                name = prop.Name;
+                break;
+            }
+        }
+        return name;
+    }
+    public static IEnumerable<Colour> GetSupportedColours()
+    {
+        return Colour.SupportedColours;
+    }
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Code;

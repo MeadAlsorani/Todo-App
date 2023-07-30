@@ -4,9 +4,11 @@ using Todo_App.Application.Common.Exceptions;
 using Todo_App.Application.TodoItems.Commands.CreateTodoItem;
 using Todo_App.Application.TodoItems.Commands.UpdateTodoItem;
 using Todo_App.Application.TodoItems.Commands.UpdateTodoItemDetail;
+using Todo_App.Application.TodoItems.Queries.GetTodoItem;
 using Todo_App.Application.TodoLists.Commands.CreateTodoList;
 using Todo_App.Domain.Entities;
 using Todo_App.Domain.Enums;
+using Todo_App.Domain.ValueObjects;
 
 namespace Todo_App.Application.IntegrationTests.TodoItems.Commands;
 
@@ -57,5 +59,37 @@ public class UpdateTodoItemDetailTests : BaseTestFixture
         item.LastModifiedBy.Should().Be(userId);
         item.LastModified.Should().NotBeNull();
         item.LastModified.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(10000));
+    }
+
+    [Test]
+    public async Task ShouldUpdateItemWithColour()
+    {
+        var userId = await RunAsDefaultUserAsync();
+
+        var listId = await SendAsync(new CreateTodoListCommand
+        {
+            Title = "New List"
+        });
+
+        var itemId = await SendAsync(new CreateTodoItemCommand
+        {
+            ListId = listId,
+            Title = "New Item"
+        });
+
+        var command = new UpdateTodoItemDetailCommand
+        {
+            Id = itemId,
+            ListId = listId,
+            Note = "A1",
+            Priority = PriorityLevel.High,
+            Colour = Colour.Yellow
+        };
+
+        await SendAsync(command);
+        var item = await SendAsync(new GetTodoItemQuery() { Id = itemId });
+
+        item.Should().NotBeNull();
+        item.Colour.Should().Be(Colour.Yellow,"Colour is wrong");
     }
 }
