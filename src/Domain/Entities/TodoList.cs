@@ -2,6 +2,7 @@
 
 public class TodoList : BaseAuditableEntity
 {
+    public bool Active { get; set; }
     public string? Title { get; set; }
 
     public Colour Colour { get; set; } = Colour.White;

@@ -2,6 +2,7 @@
 
 public class TodoItem : BaseAuditableEntity
 {
+    public bool Active { get; set; }
     public int ListId { get; set; }
 
     public string? Title { get; set; }
@@ -9,8 +10,6 @@ public class TodoItem : BaseAuditableEntity
     public string? Note { get; set; }
 
     public PriorityLevel Priority { get; set; }
-
-    public Colour Colour { get; set; } = Colour.White;
     public DateTime? Reminder { get; set; }
 
     private bool _done;
