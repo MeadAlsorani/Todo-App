@@ -30,6 +30,6 @@ public class DeleteTodoListTests : BaseTestFixture
 
         var list = await FindAsync<TodoList>(listId);
 
-        list.Should().BeNull();
+        list.Active.Should().Equals(false);
     }
 }

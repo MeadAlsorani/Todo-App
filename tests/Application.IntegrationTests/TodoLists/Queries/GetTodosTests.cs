@@ -29,6 +29,7 @@ public class GetTodosTests : BaseTestFixture
 
         await AddAsync(new TodoList
         {
+            Active = true,
             Title = "Shopping",
             Colour = Colour.Blue,
             Items =
@@ -40,6 +41,20 @@ public class GetTodosTests : BaseTestFixture
                         new TodoItem { Title = "Pasta" },
                         new TodoItem { Title = "Tissues" },
                         new TodoItem { Title = "Tuna" }
+                    }
+        });
+        await AddAsync(new TodoList
+        {
+            Active = false,
+            Title = "mobils",
+            Colour = Colour.Yellow,
+            Items =
+                    {
+                        new TodoItem { Title = "Apple", Done = true },
+                        new TodoItem { Title = "Samsung", Done = true },
+                        new TodoItem { Title = "Xioami", Done = true },
+                        new TodoItem { Title = "Huawie" },
+                        new TodoItem { Title = "Google" }
                     }
         });
 
