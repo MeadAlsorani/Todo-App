@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Todo_App.Application.Common.Interfaces;
 using Todo_App.Application.Common.Mappings;
 using Todo_App.Application.Common.Models;
@@ -29,6 +30,7 @@ public class GetTodoItemsWithPaginationQueryHandler : IRequestHandler<GetTodoIte
     {
         return await _context.TodoItems
             .Where(x => x.ListId == request.ListId)
+            .Include(x => x.ItemTags)
             .OrderBy(x => x.Title)
             .ProjectTo<TodoItemBriefDto>(_mapper.ConfigurationProvider)
             .PaginatedListAsync(request.PageNumber, request.PageSize);

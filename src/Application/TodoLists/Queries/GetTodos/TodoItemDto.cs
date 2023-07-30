@@ -18,9 +18,11 @@ public class TodoItemDto : IMapFrom<TodoItem>
 
     public string? Note { get; set; }
 
+    public List<int> Tags { get; set; } = new();
     public void Mapping(Profile profile)
     {
         profile.CreateMap<TodoItem, TodoItemDto>()
+            .ForMember(x => x.Tags, opt => opt.MapFrom(source => source.ItemTags.Select(x => x.TodoTag.Id)))
             .ForMember(d => d.Priority, opt => opt.MapFrom(s => (int)s.Priority));
     }
 }
